@@ -1,0 +1,59 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.callcat">
+
+    <!-- Права на передачу данных через интернет -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Работа в фоновом режиме -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Права на управление звонками, фоновыми звонками и контактами -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- Права для перезапуска -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Указываем, что устройство не обязано иметь аппаратное обеспечение для телекоммуникаций -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <!-- Права на показ уведомлений -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <application
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Callcat">
+
+        <!-- Пустая активность -->
+        <activity android:name=".Activity"
+                  android:theme="@android:style/Theme.NoDisplay"
+                  android:launchMode="singleTask"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".Service"
+                 android:exported="true"
+                 android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
+
+        <receiver android:name=".Receiver"
+                  android:enabled="true"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".BootReceiver"
+                  android:enabled="true"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
